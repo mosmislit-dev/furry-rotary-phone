@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Tests",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/node_modules/ts-mocha/bin/ts-mocha",
+      "args": [
+        "-p",
+        "${workspaceFolder}/tsconfig.json",
+        "-t",
+        "1000000",
+        "${workspaceFolder}/tests/**/*.ts"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+      // "windows": {
+      //   "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      // }
+    }
+  ]
+}
