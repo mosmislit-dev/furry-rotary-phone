@@ -72,7 +72,7 @@ pub mod test_project {
 pub struct Initialize<'info> {
     #[account(init, payer = user, seeds = [b"vault"], bump, space = Vault::LEN)]
     pub vault: Account<'info, Vault>,
-    #[account(init, payer = user, space = State::LEN)]
+    #[account(init, payer = user, seeds = [b"state"], bump, space = State::LEN)]
     pub auction_instance: Account<'info, State>,
     #[account(mut)]
     pub user: Signer<'info>,

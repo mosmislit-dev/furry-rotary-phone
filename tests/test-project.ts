@@ -12,12 +12,19 @@ describe("test-project", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
   const program = anchor.workspace.TestProject as Program<TestProject>;
-  let pdaVaultPublicKey: anchor.web3.PublicKey, stateBump: number;
+  let pdaVaultPublicKey: anchor.web3.PublicKey, vaultBump: number;
+  let pdaStatePublicKey: anchor.web3.PublicKey, stateBump: number;
 
   beforeEach(async () => {
-    [pdaVaultPublicKey, stateBump] =
+    [pdaVaultPublicKey, vaultBump] =
       await anchor.web3.PublicKey.findProgramAddress(
         [Buffer.from("vault")],
+        program.programId,
+      );
+
+    [pdaStatePublicKey, stateBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from("state")],
         program.programId,
       );
   });
@@ -37,7 +44,11 @@ describe("test-project", () => {
         new anchor.BN(maxParticipationAmount),
         new anchor.BN(minPotSize),
       )
-      .accounts({ vault: pdaVaultPublicKey, user: provider.publicKey })
+      .accounts({
+        vault: pdaVaultPublicKey,
+        auctionInstance: pdaStatePublicKey,
+        user: provider.publicKey,
+      })
       .rpc();
 
     const b = await provider.connection.getAccountInfo(
