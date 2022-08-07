@@ -30,12 +30,6 @@ describe("test-project", () => {
   });
 
   it("Is initialized!", async () => {
-    const a = await provider.connection.getAccountInfo(
-      provider.wallet.publicKey,
-    );
-    console.log(pdaVaultPublicKey);
-    console.log(a.owner);
-
     const tx = await program.methods
       .initialize(
         new anchor.BN(timeIncreasePerBetInSeconds),
@@ -50,11 +44,6 @@ describe("test-project", () => {
         user: provider.publicKey,
       })
       .rpc();
-
-    const b = await provider.connection.getAccountInfo(
-      provider.wallet.publicKey,
-    );
-    console.log(b.owner);
 
     // const programState = await program.account.state.fetch(
     //   program.provider.publicKey,
@@ -99,48 +88,39 @@ describe("test-project", () => {
       signature: airdropSig,
     });
 
-    const providerBalanceBefore = await provider.connection.getBalance(
-      provider.wallet.publicKey,
+    const vaultBalanceBefore = await provider.connection.getBalance(
+      pdaVaultPublicKey,
     );
+
     const userBalanceBefore = await provider.connection.getBalance(
       newUser.publicKey,
     );
 
     console.log({
-      providerBalanceBefore,
+      vaultBalanceBefore,
       userBalanceBefore,
     });
 
-    const a = await provider.connection.getAccountInfo(
-      provider.wallet.publicKey,
-    );
-    console.log(a.owner);
-
     const tx = await program.methods
-      .fundVault()
+      .fundVault(new anchor.BN(2 * anchor.web3.LAMPORTS_PER_SOL))
       .accounts({
         payer: newUser.publicKey,
-        receiver: provider.wallet.publicKey,
+        vault: pdaVaultPublicKey,
       })
       .signers([newUser])
       .rpc();
 
     console.log("Your transaction signature", tx);
 
-    const b = await provider.connection.getAccountInfo(
-      provider.wallet.publicKey,
-    );
-    console.log(b.owner);
-
-    const providerBalanceAfter = await provider.connection.getBalance(
-      provider.wallet.publicKey,
+    const vaultBalanceAfter = await provider.connection.getBalance(
+      pdaVaultPublicKey,
     );
     const userBalanceAfter = await provider.connection.getBalance(
       newUser.publicKey,
     );
 
     console.log({
-      providerBalanceAfter,
+      vaultBalanceAfter,
       userBalanceAfter,
     });
   });

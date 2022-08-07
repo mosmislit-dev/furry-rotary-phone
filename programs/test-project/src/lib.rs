@@ -45,10 +45,9 @@ pub mod test_project {
         Ok(())
     }
 
-    pub fn fund_vault(ctx: Context<FundVault>) -> Result<()> {
+    pub fn fund_vault(ctx: Context<FundVault>, amount: u64) -> Result<()> {
         let payer = &mut ctx.accounts.payer;
-        let receiver = &mut ctx.accounts.receiver;
-        let amount: u64 = 1_000_000_000;
+        let receiver = &mut ctx.accounts.vault;
 
         if payer.lamports() < amount {
             return Err(error!(ErrorCode::NotEnoughSol));
@@ -81,9 +80,8 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct FundVault<'info> {
-    /// CHECK:
-    #[account(mut)]
-    pub receiver: AccountInfo<'info>,
+    #[account(mut, seeds = [b"vault"], bump)]
+    pub vault: Account<'info, Vault>,
     #[account(mut)]
     pub payer: Signer<'info>,
 
